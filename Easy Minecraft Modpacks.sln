@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easy Minecraft Modpacks", "Easy Minecraft Modpacks\Easy Minecraft Modpacks.csproj", "{E524E3B6-64E5-4975-A565-091792DF8F0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E524E3B6-64E5-4975-A565-091792DF8F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E524E3B6-64E5-4975-A565-091792DF8F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E524E3B6-64E5-4975-A565-091792DF8F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E524E3B6-64E5-4975-A565-091792DF8F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
