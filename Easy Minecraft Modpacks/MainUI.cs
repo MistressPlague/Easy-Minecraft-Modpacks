@@ -14,7 +14,7 @@ using Libraries;
 
 namespace Easy_Minecraft_Modpacks
 {
-    public partial class Form1 : Form
+    public partial class MainUI : Form
     {
         public class Configuration
         {
@@ -30,7 +30,7 @@ namespace Easy_Minecraft_Modpacks
 
         public static ConfigLib<Configuration> Config;
 
-        public Form1()
+        public MainUI()
         {
             InitializeComponent();
         }
@@ -179,33 +179,79 @@ namespace Easy_Minecraft_Modpacks
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
                 var minecraftDirectory = folderDialog.SelectedPath;
-                // Insert your code here to install the modpack to the selected Minecraft directory
-                // this will be done by renaming the existing mods folder if any, so the user doesn't lose old mods, then downloading all mods into the mods folder we create
+                
                 var modsFolder = Path.Combine(minecraftDirectory, "mods");
                 
                 if (Directory.Exists(modsFolder))
                 {
-                    RetryNaming:
-                    var backupFolder = Path.Combine(minecraftDirectory, "mods_backup") + "_" + Guid.NewGuid().ToString("N");
-                    
-                    if (Directory.Exists(backupFolder))
+                    if (File.Exists($"{modsFolder}\\dont_backup"))
                     {
-                        goto RetryNaming;
+                        Directory.Delete(modsFolder, true);
                     }
+                    else
+                    {
+                        RetryNaming:
+                        var backupFolder = Path.Combine(minecraftDirectory, "mods_backup") + "_" + Guid.NewGuid().ToString("N");
                     
-                    Directory.Move(modsFolder, backupFolder);
+                        if (Directory.Exists(backupFolder))
+                        {
+                            goto RetryNaming;
+                        }
+                    
+                        Directory.Move(modsFolder, backupFolder);
+                    }
                 }
                 
                 Directory.CreateDirectory(modsFolder);
                 
                 foreach (var mod in Config.InternalConfig.Mods)
                 {
-                    var modFileName = mod.DownloadLink.EndsWith(".jar") ? Path.GetFileName(mod.DownloadLink) : $"{mod.Name}-{mod.Version}.jar";
+                    var modFileName = $"{mod.Name}-{mod.Version}.jar";
                     var modFilePath = Path.Combine(modsFolder, modFileName);
 
                     using var client = new WebClient();
                     
                     client.DownloadFile(mod.DownloadLink, modFilePath);
+                }
+                
+                File.WriteAllText($"{modsFolder}\\dont_backup", "");
+            }
+        }
+
+        private void generateFromModsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
+            using var folderDialog = new FolderBrowserDialog();
+            folderDialog.Description = "Select your Minecraft directory";
+
+            var mcdir =$"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\.minecraft";
+            
+            folderDialog.SelectedPath = Directory.Exists(mcdir) ? mcdir : Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            if (folderDialog.ShowDialog() == DialogResult.OK)
+            {
+                var minecraftDirectory = folderDialog.SelectedPath;
+
+                var modsFolder = Path.Combine(minecraftDirectory, "mods");
+
+                var mods = Directory.GetFiles(modsFolder, "*.jar", SearchOption.TopDirectoryOnly);
+                
+                foreach (var modFile in mods)
+                {
+                    // What if the file has no dashes? Account for it, and try to pull a version via regex, and name via filename without extension
+                    var modFileName = Path.GetFileNameWithoutExtension(modFile);
+                    
+                    // This does not account for the file not having a dash
+                    var name = Regex.Match(modFileName, @"[a-zA-Z _]*").Value;
+                    var modName = !string.IsNullOrWhiteSpace(name) ? name : modFileName;
+
+                    var ver = Regex.Match(modFileName, @"\d+\.\d+(\.\d)?").Value;
+                    
+                    var modVersion = !string.IsNullOrWhiteSpace(ver) ? ver : "";
+                    
+                    // add to datagridview
+                    dataGridView1.Rows.Add(modVersion, modName, "");
                 }
             }
         }
