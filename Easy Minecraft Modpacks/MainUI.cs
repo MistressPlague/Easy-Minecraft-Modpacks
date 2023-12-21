@@ -242,6 +242,8 @@ namespace Easy_Minecraft_Modpacks
 
                 var mods = Directory.GetFiles(modsFolder, "*.jar", SearchOption.TopDirectoryOnly);
                 
+                dataGridView1.Rows.Clear();
+                
                 foreach (var modFile in mods)
                 {
                     // What if the file has no dashes? Account for it, and try to pull a version via regex, and name via filename without extension
