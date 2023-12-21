@@ -116,7 +116,7 @@ namespace Easy_Minecraft_Modpacks
                     {
                         case "Version":
                         {
-                            if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"\d\.\d"))
+                            if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"\d+\.\d+(\.\d)?"))
                             {
                                 cell.Style.BackColor = Color.Red;
                                 cell.Style.SelectionBackColor = Color.Red;
