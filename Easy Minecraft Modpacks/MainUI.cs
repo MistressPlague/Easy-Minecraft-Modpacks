@@ -166,6 +166,8 @@ namespace Easy_Minecraft_Modpacks
 
         private void installToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            installToolStripMenuItem.Enabled = false;
+            
             MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             
             using var folderDialog = new FolderBrowserDialog();
@@ -217,6 +219,8 @@ namespace Easy_Minecraft_Modpacks
 
                 MessageBox.Show("Done!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            
+            installToolStripMenuItem.Enabled = true;
         }
 
         private void generateFromModsToolStripMenuItem_Click(object sender, EventArgs e)
