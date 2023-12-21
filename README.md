@@ -1,3 +1,5 @@
+# [Download](https://nightly.link/MistressPlague/Easy-Minecraft-Modpacks/workflows/dotnet-desktop/master/Output.zip)
+
 Making minecraft modpacks and sharing them with friends is easy now.
 
 # Important Info
