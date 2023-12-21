@@ -38,8 +38,8 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.installToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label1 = new System.Windows.Forms.Label();
             this.generateFromModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -111,6 +111,13 @@
             this.installToolStripMenuItem.Text = "Install";
             this.installToolStripMenuItem.Click += new System.EventHandler(this.installToolStripMenuItem_Click);
             // 
+            // generateFromModsToolStripMenuItem
+            // 
+            this.generateFromModsToolStripMenuItem.Name = "generateFromModsToolStripMenuItem";
+            this.generateFromModsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.generateFromModsToolStripMenuItem.Text = "Generate From Mods";
+            this.generateFromModsToolStripMenuItem.Click += new System.EventHandler(this.generateFromModsToolStripMenuItem_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -119,13 +126,6 @@
             this.label1.Size = new System.Drawing.Size(412, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Use the \"Delete\" key to delete an entry after clicking on the leftmost to select " + "the row.";
-            // 
-            // generateFromModsToolStripMenuItem
-            // 
-            this.generateFromModsToolStripMenuItem.Name = "generateFromModsToolStripMenuItem";
-            this.generateFromModsToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.generateFromModsToolStripMenuItem.Text = "Generate From Mods";
-            this.generateFromModsToolStripMenuItem.Click += new System.EventHandler(this.generateFromModsToolStripMenuItem_Click);
             // 
             // MainUI
             // 
@@ -139,6 +139,7 @@
             this.Name = "MainUI";
             this.ShowIcon = false;
             this.Text = "Easy Minecraft Modpacks";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainUI_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

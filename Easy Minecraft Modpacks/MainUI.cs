@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Libraries;
+using Newtonsoft.Json;
 
 namespace Easy_Minecraft_Modpacks
 {
@@ -37,6 +38,11 @@ namespace Easy_Minecraft_Modpacks
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!DoUnsavedChangesCheck())
+            {
+                return;
+            }
+            
             using var popup = new OpenFileDialog();
             popup.Filter = "Modpack Config|*.Modpack.json";
 
@@ -223,8 +229,13 @@ namespace Easy_Minecraft_Modpacks
             installToolStripMenuItem.Enabled = true;
         }
 
-        private void generateFromModsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void generateFromModsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!DoUnsavedChangesCheck())
+            {
+                return;
+            }
+            
             MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             
             using var folderDialog = new FolderBrowserDialog();
@@ -236,6 +247,8 @@ namespace Easy_Minecraft_Modpacks
 
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
+                Enabled = false;
+                
                 var minecraftDirectory = folderDialog.SelectedPath;
 
                 var modsFolder = Path.Combine(minecraftDirectory, "mods");
@@ -246,6 +259,8 @@ namespace Easy_Minecraft_Modpacks
                 
                 foreach (var modFile in mods)
                 {
+                    var uploadedFile = await File_IO_API.UploadFile(modFile);
+                    
                     // What if the file has no dashes? Account for it, and try to pull a version via regex, and name via filename without extension
                     var modFileName = Path.GetFileNameWithoutExtension(modFile);
                     
@@ -258,7 +273,69 @@ namespace Easy_Minecraft_Modpacks
                     var modVersion = !string.IsNullOrWhiteSpace(ver) ? ver : "";
                     
                     // add to datagridview
-                    dataGridView1.Rows.Add(modVersion, modName, "");
+                    dataGridView1.Rows.Add(modVersion, modName, uploadedFile.Item2);
+                }
+
+                Enabled = true;
+            }
+        }
+
+        private bool DoUnsavedChangesCheck()
+        {
+            var currmods = new List<ModInfo>();
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                {
+                    currmods.Add(new ModInfo());
+                }
+                
+                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                {
+                    continue;
+                }
+
+                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                currmods.Add(mod);
+            }
+
+            if (currmods.Count > 0 && (Config == null || JsonConvert.SerializeObject(currmods) != JsonConvert.SerializeObject(Config.InternalConfig.Mods)))
+            {
+                if (MessageBox.Show("Are you sure you want to do this? You have unsaved changes that will be lost!", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void MainUI_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var mods = new List<ModInfo>();
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                {
+                    mods.Add(new ModInfo());
+                }
+                
+                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                {
+                    continue;
+                }
+
+                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                mods.Add(mod);
+            }
+
+            if (mods.Count > 0 && (Config == null || JsonConvert.SerializeObject(mods) != JsonConvert.SerializeObject(Config.InternalConfig.Mods)))
+            {
+                if (MessageBox.Show("Are you sure you want to quit? You have unsaved changes!", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    e.Cancel = true;
                 }
             }
         }
