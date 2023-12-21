@@ -1,4 +1,4 @@
-name: Build Insanity
+name: Build
  
 on:
   push:
