@@ -1,0 +1,37 @@
+name: Build Insanity
+ 
+on:
+  push:
+    branches: master
+ 
+jobs:
+  build:
+ 
+    runs-on: windows-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+ 
+    steps:
+    - uses: actions/checkout@v1
+      name: Checkout Code
+     
+    - name: Setup MSBuild Path
+      uses: microsoft/setup-msbuild@v1
+       
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+     
+    - name: Restore NuGet Packages
+      run: nuget restore "Easy Minecraft Modpacks.sln"
+ 
+    - name: Build and Publish Insanity
+      run: msbuild "Easy Minecraft Modpacks.sln" /p:platform="Any CPU" /p:configuration="Release"
+ 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: Output
+        path: Easy Minecraft Modpacks\bin\Release
