@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Easy_Minecraft_Modpacks;
 
-public class File_IO_API
+public class GoFileAPI
 {
     public class BestServerResponse
     {

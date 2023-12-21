@@ -259,7 +259,7 @@ namespace Easy_Minecraft_Modpacks
                 
                 foreach (var modFile in mods)
                 {
-                    var uploadedFile = await File_IO_API.UploadFile(modFile);
+                    var uploadedFile = await GoFileAPI.UploadFile(modFile);
                     
                     var modFileName = Path.GetFileNameWithoutExtension(modFile);
                     

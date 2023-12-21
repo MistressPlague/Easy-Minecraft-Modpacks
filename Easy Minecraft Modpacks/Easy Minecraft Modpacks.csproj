@@ -51,7 +51,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="ConfigLib.cs" />
-        <Compile Include="File.IO.API.cs" />
+        <Compile Include="GoFileAPI.cs" />
         <Compile Include="MainUI.cs">
             <SubType>Form</SubType>
         </Compile>
