@@ -102,7 +102,6 @@ namespace Easy_Minecraft_Modpacks
             MessageBox.Show("Done!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // regex check when a cell's text is modified, assuming textbox type of cell, and if not matched, mark it as a "error" cell
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
@@ -215,6 +214,8 @@ namespace Easy_Minecraft_Modpacks
                 }
                 
                 File.WriteAllText($"{modsFolder}\\dont_backup", "");
+
+                MessageBox.Show("Done!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
