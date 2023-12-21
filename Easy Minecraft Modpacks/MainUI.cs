@@ -261,7 +261,6 @@ namespace Easy_Minecraft_Modpacks
                 {
                     var uploadedFile = await File_IO_API.UploadFile(modFile);
                     
-                    // What if the file has no dashes? Account for it, and try to pull a version via regex, and name via filename without extension
                     var modFileName = Path.GetFileNameWithoutExtension(modFile);
                     
                     // This does not account for the file not having a dash
