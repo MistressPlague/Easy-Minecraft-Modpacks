@@ -360,6 +360,21 @@ namespace Easy_Minecraft_Modpacks
                 }
             }
         }
+
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            UpdateRow(1);
+        }
+
+        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            UpdateRow(-1);
+        }
+
+        private void UpdateRow(int stuff)
+        {
+            label2.Text = (int.Parse(label2.Text) + stuff).ToString();
+        }
     }
 
     public static class Extensions

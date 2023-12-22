@@ -56,6 +56,8 @@
             this.dataGridView1.Size = new System.Drawing.Size(800, 426);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
+            this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
             // 
             // Version
             // 
@@ -137,7 +139,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 21);
             this.label2.TabIndex = 3;
-            this.label2.Text = "0";
+            this.label2.Text = "1";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainUI
