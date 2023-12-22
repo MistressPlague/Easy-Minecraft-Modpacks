@@ -6,6 +6,7 @@ Making minecraft modpacks and sharing them with friends is easy now.
 Download MUST be a direct download link. Not a link to a download page. Direct to file.
 
 On CurseForge, click download, then right click and copy link address for the try again text.
+Easy Minecraft Modpacks will autocorrect the URL if you right click the main download button instead of try again. Note this is exclusive to curseforge. Other websites that don't have a direct download for a download button will need worked around by the user.
 
 On Modrinth, right clicking the main download button is direct.
 
