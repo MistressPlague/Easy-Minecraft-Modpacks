@@ -136,11 +136,10 @@
             // label2
             // 
             this.label2.BackColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(731, 0);
+            this.label2.Location = new System.Drawing.Point(465, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 21);
+            this.label2.Size = new System.Drawing.Size(323, 21);
             this.label2.TabIndex = 3;
-            this.label2.Text = "1";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainUI

@@ -196,6 +196,8 @@ namespace Easy_Minecraft_Modpacks
                         }
                     }
                 }
+                
+                UpdateRows();
             }
         }
 
@@ -374,7 +376,7 @@ namespace Easy_Minecraft_Modpacks
                 intyes++;
             }
 
-            label2.Text = $"{dataGridView1.Rows.Count} ({intyes})";
+            label2.Text = $"{dataGridView1.Rows.Count} Rows, {dataGridView1.Rows.Count - intyes} Misc, {intyes} actual mods";
 
         }
 
