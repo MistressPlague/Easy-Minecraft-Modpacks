@@ -370,14 +370,13 @@ namespace Easy_Minecraft_Modpacks
             {
                 var Name = row.Cells[1]?.Value?.ToString();
 
-                if (Name == null) continue;
+                if (Name == null || row.Cells[1].Style.BackColor == Color.Red) continue;
                 if (Name.ToLower().Contains(" api") || Name.ToLower().Contains(" config") || Name.ToLower().Contains(" lib")) continue;
 
                 intyes++;
             }
 
             label2.Text = $"{dataGridView1.Rows.Count} Rows, {dataGridView1.Rows.Count - intyes} Misc, {intyes} actual mods";
-
         }
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
