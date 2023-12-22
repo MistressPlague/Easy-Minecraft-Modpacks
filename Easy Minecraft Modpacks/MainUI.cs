@@ -361,19 +361,31 @@ namespace Easy_Minecraft_Modpacks
             }
         }
 
+        private void UpdateRows()
+        {
+            var intyes = 0;
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                var Name = row.Cells[1]?.Value?.ToString();
+
+                if (Name == null) continue;
+                if (Name.ToLower().Contains(" api") || Name.ToLower().Contains(" config") || Name.ToLower().Contains(" lib")) continue;
+
+                intyes++;
+            }
+
+            label2.Text = $"{dataGridView1.Rows.Count} ({intyes})";
+
+        }
+
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            UpdateRow(1);
+           UpdateRows();
         }
 
         private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            UpdateRow(-1);
-        }
-
-        private void UpdateRow(int stuff)
-        {
-            label2.Text = (int.Parse(label2.Text) + stuff).ToString();
+            UpdateRows();
         }
     }
 
