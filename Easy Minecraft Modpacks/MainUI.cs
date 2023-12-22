@@ -375,9 +375,22 @@ namespace Easy_Minecraft_Modpacks
         {
             var data = client.DownloadData(url);
 
+            var redir = Workarounds.GetRedirectedUrl(url);
+
             var disposition = client.ResponseHeaders["Content-Disposition"];
             
-            var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1));
+            var locationEnding = redir?.Substring(redir.LastIndexOf("/", StringComparison.Ordinal) + 1);
+            
+            var hasQuery = locationEnding?.IndexOf("?", StringComparison.Ordinal) ?? -1;
+
+            if (hasQuery != -1)
+            {
+                locationEnding = locationEnding?.Substring(0, hasQuery);
+            }
+                
+            var urlEnding = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
+            
+            var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding));
 
             File.WriteAllBytes($"{targetDir}\\{filename}", data);
 
