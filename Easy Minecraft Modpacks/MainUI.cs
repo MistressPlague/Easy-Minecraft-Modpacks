@@ -161,6 +161,11 @@ namespace Easy_Minecraft_Modpacks
                             {
                                 cell.Style.BackColor = dataGridView1.DefaultCellStyle.BackColor;
                                 cell.Style.SelectionBackColor = dataGridView1.DefaultCellStyle.SelectionBackColor;
+
+                                if (value.Contains("cdn.modrinth.com"))
+                                {
+                                    // ToDo
+                                }
                             }
 
                             break;
