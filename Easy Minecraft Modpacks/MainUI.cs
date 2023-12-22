@@ -377,7 +377,7 @@ namespace Easy_Minecraft_Modpacks
 
             var disposition = client.ResponseHeaders["Content-Disposition"];
             
-            var filename = disposition != null ? new ContentDisposition(disposition).FileName : url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
+            var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1));
 
             File.WriteAllBytes($"{targetDir}\\{filename}", data);
 
@@ -411,7 +411,7 @@ namespace Easy_Minecraft_Modpacks
                 
             var urlEnding = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
             
-            var filename = disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding);
+            var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding));
 
             return filename;
         }
@@ -419,6 +419,11 @@ namespace Easy_Minecraft_Modpacks
 
     public class Workarounds
     {
+        public static string UrlDecode(string url)
+        {
+            return Uri.UnescapeDataString(url);
+        }
+        
         public static string GetRedirectedUrl(string url)
         {
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
