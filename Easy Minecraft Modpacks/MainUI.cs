@@ -166,7 +166,13 @@ namespace Easy_Minecraft_Modpacks
                                 cell.Style.BackColor = dataGridView1.DefaultCellStyle.BackColor;
                                 cell.Style.SelectionBackColor = dataGridView1.DefaultCellStyle.SelectionBackColor;
 
-                                if (string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()) && string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString()))
+                                if (value.Contains("curseforge.com/api/v1/mods") && !value.Contains("/download"))
+                                {
+                                    cell.Value = cell.Value + "/download";
+                                    value = cell.Value.ToString();
+                                }
+
+                                if (string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[0].Value?.ToString()) && string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[1].Value?.ToString()))
                                 {
                                     var filename = client.GetFileName(value);
 
