@@ -161,9 +161,9 @@ namespace Easy_Minecraft_Modpacks
                                     var filename = client.GetFileName(value);
 
                                     var name = Regex.Match(filename, @"[a-zA-Z _\-]*").Value;
-                                
+
                                     var modName = (!string.IsNullOrWhiteSpace(name) ? name : "").Replace("-", " ").Trim();
-                                
+
                                     modName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(modName).Replace("Api", "API").Replace("Fabric", "").Replace("Forge", "").Trim();
 
                                     dataGridView1.Rows[e.RowIndex].Cells["ModName"].Value = modName;
@@ -174,7 +174,7 @@ namespace Easy_Minecraft_Modpacks
                         }
                     }
                 }
-                
+
                 UpdateRows();
             }
         }
@@ -355,7 +355,7 @@ namespace Easy_Minecraft_Modpacks
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-           UpdateRows();
+            UpdateRows();
         }
 
         private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
@@ -380,18 +380,18 @@ namespace Easy_Minecraft_Modpacks
             var redir = Workarounds.GetRedirectedUrl(url);
 
             var disposition = client.ResponseHeaders["Content-Disposition"];
-            
+
             var locationEnding = redir?.Substring(redir.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var hasQuery = locationEnding?.IndexOf("?", StringComparison.Ordinal) ?? -1;
 
             if (hasQuery != -1)
             {
                 locationEnding = locationEnding?.Substring(0, hasQuery);
             }
-                
+
             var urlEnding = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding));
 
             File.WriteAllBytes($"{targetDir}\\{filename}", data);
@@ -414,18 +414,18 @@ namespace Easy_Minecraft_Modpacks
             var redir = Workarounds.GetRedirectedUrl(url);
 
             var disposition = client.ResponseHeaders["Content-Disposition"];
-            
+
             var locationEnding = redir?.Substring(redir.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var hasQuery = locationEnding?.IndexOf("?", StringComparison.Ordinal) ?? -1;
 
             if (hasQuery != -1)
             {
                 locationEnding = locationEnding?.Substring(0, hasQuery);
             }
-                
+
             var urlEnding = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding));
 
             return filename;
@@ -438,7 +438,7 @@ namespace Easy_Minecraft_Modpacks
         {
             return Uri.UnescapeDataString(url);
         }
-        
+
         public static string GetRedirectedUrl(string url)
         {
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -457,15 +457,15 @@ namespace Easy_Minecraft_Modpacks
                     }
                 }
             }
-            catch(System.Net.WebException e)
+            catch (System.Net.WebException e)
             {
-                if(e.Status == WebExceptionStatus.ProtocolError)
+                if (e.Status == WebExceptionStatus.ProtocolError)
                 {
                     var response = (HttpWebResponse)e.Response;
-                    if(response.StatusCode == HttpStatusCode.Redirect
-                       || response.StatusCode == HttpStatusCode.MovedPermanently
-                       || response.StatusCode == HttpStatusCode.TemporaryRedirect
-                      )
+                    if (response.StatusCode == HttpStatusCode.Redirect
+                        || response.StatusCode == HttpStatusCode.MovedPermanently
+                        || response.StatusCode == HttpStatusCode.TemporaryRedirect
+                       )
                     {
                         return response.Headers["Location"];
                     }
