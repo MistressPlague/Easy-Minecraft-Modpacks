@@ -15,4 +15,4 @@ On Modrinth, right clicking the main download button is direct.
 - Generate mod list from existing mods folder, saving SOME time. Note this isn't a one click and done; it will still need the name adjusted if wrong.
 - Pasting A download link **when name is not filled in** will try to autofill via obtaining it from the URL pasted, otherwise try to pull it from the filename retrieved.
 
-![image](https://github.com/MistressPlague/Easy-Minecraft-Modpacks/assets/36628963/a7403dbb-56d5-4d5a-b15e-2fd24b867d58)
+![image](https://github.com/MistressPlague/Easy-Minecraft-Modpacks/assets/36628963/ba08d98a-5da6-4780-94c6-c297f1e58578)
