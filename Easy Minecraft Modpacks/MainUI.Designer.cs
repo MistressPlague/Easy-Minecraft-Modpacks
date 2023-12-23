@@ -30,9 +30,6 @@
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Version = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Download = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +38,8 @@
             this.generateFromModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.ModName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Download = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -49,7 +48,7 @@
             // 
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Version, this.ModName, this.Download });
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.ModName, this.Download });
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 24);
             this.dataGridView1.MultiSelect = false;
@@ -59,22 +58,6 @@
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
-            // 
-            // Version
-            // 
-            this.Version.HeaderText = "Version";
-            this.Version.Name = "Version";
-            // 
-            // ModName
-            // 
-            this.ModName.HeaderText = "Name";
-            this.ModName.Name = "ModName";
-            // 
-            // Download
-            // 
-            this.Download.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Download.HeaderText = "Download";
-            this.Download.Name = "Download";
             // 
             // menuStrip1
             // 
@@ -142,6 +125,17 @@
             this.label2.TabIndex = 3;
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // ModName
+            // 
+            this.ModName.HeaderText = "Name";
+            this.ModName.Name = "ModName";
+            // 
+            // Download
+            // 
+            this.Download.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Download.HeaderText = "Download";
+            this.Download.Name = "Download";
+            // 
             // MainUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,7 +164,6 @@
 
         private System.Windows.Forms.Label label1;
 
-        private System.Windows.Forms.DataGridViewTextBoxColumn Version;
         private System.Windows.Forms.DataGridViewTextBoxColumn ModName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Download;
 

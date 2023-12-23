@@ -26,7 +26,6 @@ namespace Easy_Minecraft_Modpacks
 
         public class ModInfo
         {
-            public string Version;
             public string Name;
             public string DownloadLink;
         }
@@ -58,7 +57,7 @@ namespace Easy_Minecraft_Modpacks
 
                 foreach (var mod in Config.InternalConfig.Mods)
                 {
-                    dataGridView1.Rows.Add(mod.Version, mod.Name, mod.DownloadLink);
+                    dataGridView1.Rows.Add(mod.Name, mod.DownloadLink);
                 }
             }
         }
@@ -69,18 +68,18 @@ namespace Easy_Minecraft_Modpacks
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                if (row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
                 {
                     MessageBox.Show("Please fix the errors in formatting before saving.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                if (string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
                 {
                     continue;
                 }
 
-                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                var mod = new ModInfo { Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
                 mods.Add(mod);
             }
 
@@ -124,21 +123,6 @@ namespace Easy_Minecraft_Modpacks
 
                     switch (column.Name)
                     {
-                        case "Version":
-                        {
-                            if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"\d+\.\d+(\.\d)?"))
-                            {
-                                cell.Style.BackColor = Color.Red;
-                                cell.Style.SelectionBackColor = Color.Red;
-                            }
-                            else
-                            {
-                                cell.Style.BackColor = dataGridView1.DefaultCellStyle.BackColor;
-                                cell.Style.SelectionBackColor = dataGridView1.DefaultCellStyle.SelectionBackColor;
-                            }
-
-                            break;
-                        }
                         case "ModName":
                         {
                             if (string.IsNullOrWhiteSpace(value))
@@ -172,7 +156,7 @@ namespace Easy_Minecraft_Modpacks
                                     value = cell.Value.ToString();
                                 }
 
-                                if (string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[0].Value?.ToString()) && string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[1].Value?.ToString()))
+                                if (string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells["ModName"].Value?.ToString()))
                                 {
                                     var filename = client.GetFileName(value);
 
@@ -182,13 +166,7 @@ namespace Easy_Minecraft_Modpacks
                                 
                                     modName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(modName).Replace("Api", "API").Replace("Fabric", "").Replace("Forge", "").Trim();
 
-                                    var verMatches = Regex.Matches(filename, @"\d+\.\d+(\.\d)?");
-                                    var ver = verMatches[verMatches.Count - 1].Value;
-
-                                    var modVersion = dataGridView1.Rows.Count > 1 && e.RowIndex > 0 ? dataGridView1.Rows[e.RowIndex - 1].Cells[0].Value?.ToString() ?? ver : (!string.IsNullOrWhiteSpace(ver) ? ver : "");
-
-                                    dataGridView1.Rows[e.RowIndex].Cells[0].Value = modVersion;
-                                    dataGridView1.Rows[e.RowIndex].Cells[1].Value = modName;
+                                    dataGridView1.Rows[e.RowIndex].Cells["ModName"].Value = modName;
                                 }
                             }
 
@@ -292,11 +270,7 @@ namespace Easy_Minecraft_Modpacks
                     var name = Regex.Match(modFileName, @"[a-zA-Z _]*").Value;
                     var modName = !string.IsNullOrWhiteSpace(name) ? name : modFileName;
 
-                    var ver = Regex.Match(modFileName, @"\d+\.\d+(\.\d)?").Value;
-
-                    var modVersion = !string.IsNullOrWhiteSpace(ver) ? ver : "";
-
-                    dataGridView1.Rows.Add(modVersion, modName, uploadedFile.Item2);
+                    dataGridView1.Rows.Add(modName, uploadedFile.Item2);
                 }
 
                 Enabled = true;
@@ -309,17 +283,17 @@ namespace Easy_Minecraft_Modpacks
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                if (row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
                 {
                     currmods.Add(new ModInfo());
                 }
 
-                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                if (string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
                 {
                     continue;
                 }
 
-                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                var mod = new ModInfo { Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
                 currmods.Add(mod);
             }
 
@@ -340,17 +314,17 @@ namespace Easy_Minecraft_Modpacks
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                if (row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
                 {
                     mods.Add(new ModInfo());
                 }
 
-                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                if (string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
                 {
                     continue;
                 }
 
-                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                var mod = new ModInfo { Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
                 mods.Add(mod);
             }
 
@@ -368,9 +342,9 @@ namespace Easy_Minecraft_Modpacks
             var intyes = 0;
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                var Name = row.Cells[1]?.Value?.ToString();
+                var Name = row.Cells["ModName"]?.Value?.ToString();
 
-                if (Name == null || row.Cells[1].Style.BackColor == Color.Red) continue;
+                if (Name == null || row.Cells["ModName"].Style.BackColor == Color.Red) continue;
                 if (Name.ToLower().Contains(" api") || Name.ToLower().Contains(" config") || Name.ToLower().Contains(" lib")) continue;
 
                 intyes++;
