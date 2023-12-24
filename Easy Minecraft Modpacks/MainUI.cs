@@ -344,8 +344,7 @@ namespace Easy_Minecraft_Modpacks
             {
                 return;
             }
-            
-            Console.WriteLine("Found JSON ?");
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
