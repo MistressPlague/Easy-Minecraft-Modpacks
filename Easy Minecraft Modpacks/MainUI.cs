@@ -357,8 +357,6 @@ namespace Easy_Minecraft_Modpacks
         {
             try
             {
-                Enabled = false;
-
                 MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 using var folderDialog = new SaveFileDialog();
@@ -371,6 +369,8 @@ namespace Easy_Minecraft_Modpacks
 
                 if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
+                    Enabled = false;
+                    
                     var minecraftDirectory = Path.GetDirectoryName(folderDialog.FileName);
 
                     var modsFolder = Path.Combine(minecraftDirectory, "mods");
