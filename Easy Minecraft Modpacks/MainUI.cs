@@ -32,6 +32,7 @@ namespace Easy_Minecraft_Modpacks
         }
 
         public static ConfigLib<Configuration> Config;
+        private string FileExt = "Modpack.json";
 
         private static WebClient client = new WebClient();
 
@@ -94,7 +95,7 @@ namespace Easy_Minecraft_Modpacks
             {
                 using var popup = new SaveFileDialog();
                 popup.Filter = "Modpack Config|*.Modpack.json";
-                popup.FileName = "NoName.Modpack.json";
+                popup.FileName = $"NoName.{FileExt}";
 
                 if (popup.ShowDialog() == DialogResult.OK)
                 {
@@ -201,6 +202,7 @@ namespace Easy_Minecraft_Modpacks
 
         private void installToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
             installToolStripMenuItem.Enabled = false;
 
             MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -238,13 +240,6 @@ namespace Easy_Minecraft_Modpacks
                     }
                 }
 
-                Directory.CreateDirectory(modsFolder);
-
-                foreach (var mod in Config.InternalConfig.Mods)
-                {
-                    client.BetterDownloadFile(mod.DownloadLink, modsFolder);
-                }
-
                 File.WriteAllText($"{modsFolder}\\dont_backup", "");
 
                 MessageBox.Show("Done!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -259,7 +254,7 @@ namespace Easy_Minecraft_Modpacks
             {
                 return;
             }
-
+            
             MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             using var folderDialog = new FolderBrowserDialog();
@@ -386,6 +381,35 @@ namespace Easy_Minecraft_Modpacks
         private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             UpdateRows();
+        }
+
+        private void dataGridView1_DragEnter(object sender, DragEventArgs e)
+        {
+            Console.WriteLine("Found JSON ?");
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (!files[0].EndsWith(FileExt)) return;
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void dataGridView1_DragDrop(object sender, DragEventArgs e)
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null && files.Length > 0)
+            {
+                var file = files[0];
+                if (file.EndsWith(FileExt))
+                {
+                    Config = new ConfigLib<Configuration>(file);
+                    dataGridView1.Rows.Clear();
+                    foreach (var mod in Config.InternalConfig.Mods)
+                    {
+                        dataGridView1.Rows.Add(mod.Version, mod.Name, mod.DownloadLink);
+                    }
+                }
+            }
         }
     }
 
