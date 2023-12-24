@@ -239,6 +239,13 @@ namespace Easy_Minecraft_Modpacks
                         Directory.Move(modsFolder, backupFolder);
                     }
                 }
+                
+                Directory.CreateDirectory(modsFolder);
+
+                foreach (var mod in Config.InternalConfig.Mods)
+                {
+                    client.BetterDownloadFile(mod.DownloadLink, modsFolder);
+                }
 
                 File.WriteAllText($"{modsFolder}\\dont_backup", "");
 
@@ -385,6 +392,11 @@ namespace Easy_Minecraft_Modpacks
 
         private void dataGridView1_DragEnter(object sender, DragEventArgs e)
         {
+            if (!DoUnsavedChangesCheck())
+            {
+                return;
+            }
+            
             Console.WriteLine("Found JSON ?");
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
