@@ -26,13 +26,11 @@ namespace Easy_Minecraft_Modpacks
 
         public class ModInfo
         {
-            public string Version;
             public string Name;
             public string DownloadLink;
         }
 
         public static ConfigLib<Configuration> Config;
-        private string FileExt = "Modpack.json";
 
         private static WebClient client = new WebClient();
 
@@ -59,7 +57,7 @@ namespace Easy_Minecraft_Modpacks
 
                 foreach (var mod in Config.InternalConfig.Mods)
                 {
-                    dataGridView1.Rows.Add(mod.Version, mod.Name, mod.DownloadLink);
+                    dataGridView1.Rows.Add(mod.Name, mod.DownloadLink);
                 }
             }
         }
@@ -70,18 +68,18 @@ namespace Easy_Minecraft_Modpacks
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                if (row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
                 {
                     MessageBox.Show("Please fix the errors in formatting before saving.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                if (string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
                 {
                     continue;
                 }
 
-                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                var mod = new ModInfo { Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
                 mods.Add(mod);
             }
 
@@ -95,7 +93,7 @@ namespace Easy_Minecraft_Modpacks
             {
                 using var popup = new SaveFileDialog();
                 popup.Filter = "Modpack Config|*.Modpack.json";
-                popup.FileName = $"NoName.{FileExt}";
+                popup.FileName = "NoName.Modpack.json";
 
                 if (popup.ShowDialog() == DialogResult.OK)
                 {
@@ -125,21 +123,6 @@ namespace Easy_Minecraft_Modpacks
 
                     switch (column.Name)
                     {
-                        case "Version":
-                        {
-                            if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"\d+\.\d+(\.\d)?"))
-                            {
-                                cell.Style.BackColor = Color.Red;
-                                cell.Style.SelectionBackColor = Color.Red;
-                            }
-                            else
-                            {
-                                cell.Style.BackColor = dataGridView1.DefaultCellStyle.BackColor;
-                                cell.Style.SelectionBackColor = dataGridView1.DefaultCellStyle.SelectionBackColor;
-                            }
-
-                            break;
-                        }
                         case "ModName":
                         {
                             if (string.IsNullOrWhiteSpace(value))
@@ -173,23 +156,17 @@ namespace Easy_Minecraft_Modpacks
                                     value = cell.Value.ToString();
                                 }
 
-                                if (string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[0].Value?.ToString()) && string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells[1].Value?.ToString()))
+                                if (string.IsNullOrEmpty(dataGridView1.Rows[e.RowIndex].Cells["ModName"].Value?.ToString()))
                                 {
                                     var filename = client.GetFileName(value);
 
                                     var name = Regex.Match(filename, @"[a-zA-Z _\-]*").Value;
-                                
+
                                     var modName = (!string.IsNullOrWhiteSpace(name) ? name : "").Replace("-", " ").Trim();
-                                
+
                                     modName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(modName).Replace("Api", "API").Replace("Fabric", "").Replace("Forge", "").Trim();
 
-                                    var verMatches = Regex.Matches(filename, @"\d+\.\d+(\.\d)?");
-                                    var ver = verMatches[verMatches.Count - 1].Value;
-
-                                    var modVersion = dataGridView1.Rows.Count > 1 && e.RowIndex > 0 ? dataGridView1.Rows[e.RowIndex - 1].Cells[0].Value?.ToString() ?? ver : (!string.IsNullOrWhiteSpace(ver) ? ver : "");
-
-                                    dataGridView1.Rows[e.RowIndex].Cells[0].Value = modVersion;
-                                    dataGridView1.Rows[e.RowIndex].Cells[1].Value = modName;
+                                    dataGridView1.Rows[e.RowIndex].Cells["ModName"].Value = modName;
                                 }
                             }
 
@@ -197,12 +174,13 @@ namespace Easy_Minecraft_Modpacks
                         }
                     }
                 }
+
+                UpdateRows();
             }
         }
 
         private void installToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
             installToolStripMenuItem.Enabled = false;
 
             MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -239,7 +217,7 @@ namespace Easy_Minecraft_Modpacks
                         Directory.Move(modsFolder, backupFolder);
                     }
                 }
-                
+
                 Directory.CreateDirectory(modsFolder);
 
                 foreach (var mod in Config.InternalConfig.Mods)
@@ -261,7 +239,7 @@ namespace Easy_Minecraft_Modpacks
             {
                 return;
             }
-            
+
             MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             using var folderDialog = new FolderBrowserDialog();
@@ -292,11 +270,7 @@ namespace Easy_Minecraft_Modpacks
                     var name = Regex.Match(modFileName, @"[a-zA-Z _]*").Value;
                     var modName = !string.IsNullOrWhiteSpace(name) ? name : modFileName;
 
-                    var ver = Regex.Match(modFileName, @"\d+\.\d+(\.\d)?").Value;
-
-                    var modVersion = !string.IsNullOrWhiteSpace(ver) ? ver : "";
-
-                    dataGridView1.Rows.Add(modVersion, modName, uploadedFile.Item2);
+                    dataGridView1.Rows.Add(modName, uploadedFile.Item2);
                 }
 
                 Enabled = true;
@@ -309,17 +283,17 @@ namespace Easy_Minecraft_Modpacks
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                if (row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
                 {
                     currmods.Add(new ModInfo());
                 }
 
-                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                if (string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
                 {
                     continue;
                 }
 
-                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                var mod = new ModInfo { Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
                 currmods.Add(mod);
             }
 
@@ -340,17 +314,17 @@ namespace Easy_Minecraft_Modpacks
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells["Version"].Style.BackColor == Color.Red || row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
+                if (row.Cells["ModName"].Style.BackColor == Color.Red || row.Cells["Download"].Style.BackColor == Color.Red)
                 {
                     mods.Add(new ModInfo());
                 }
 
-                if (string.IsNullOrWhiteSpace(row.Cells["Version"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
+                if (string.IsNullOrWhiteSpace(row.Cells["ModName"]?.Value?.ToString()) || string.IsNullOrWhiteSpace(row.Cells["Download"]?.Value?.ToString()))
                 {
                     continue;
                 }
 
-                var mod = new ModInfo { Version = row.Cells["Version"].Value.ToString(), Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
+                var mod = new ModInfo { Name = row.Cells["ModName"].Value.ToString(), DownloadLink = row.Cells["Download"].Value.ToString() };
                 mods.Add(mod);
             }
 
@@ -368,60 +342,25 @@ namespace Easy_Minecraft_Modpacks
             var intyes = 0;
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                var Name = row.Cells[1]?.Value?.ToString();
+                var Name = row.Cells["ModName"]?.Value?.ToString();
 
-                if (Name == null) continue;
+                if (Name == null || row.Cells["ModName"].Style.BackColor == Color.Red) continue;
                 if (Name.ToLower().Contains(" api") || Name.ToLower().Contains(" config") || Name.ToLower().Contains(" lib")) continue;
 
                 intyes++;
             }
 
-            label2.Text = $"{dataGridView1.Rows.Count} ({intyes})";
-
+            label2.Text = $"{dataGridView1.Rows.Count} Rows, {dataGridView1.Rows.Count - intyes} Misc, {intyes} actual mods";
         }
 
         private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-           UpdateRows();
+            UpdateRows();
         }
 
         private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             UpdateRows();
-        }
-
-        private void dataGridView1_DragEnter(object sender, DragEventArgs e)
-        {
-            if (!DoUnsavedChangesCheck())
-            {
-                return;
-            }
-            
-            Console.WriteLine("Found JSON ?");
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (!files[0].EndsWith(FileExt)) return;
-                e.Effect = DragDropEffects.Copy;
-            }
-        }
-
-        private void dataGridView1_DragDrop(object sender, DragEventArgs e)
-        {
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files != null && files.Length > 0)
-            {
-                var file = files[0];
-                if (file.EndsWith(FileExt))
-                {
-                    Config = new ConfigLib<Configuration>(file);
-                    dataGridView1.Rows.Clear();
-                    foreach (var mod in Config.InternalConfig.Mods)
-                    {
-                        dataGridView1.Rows.Add(mod.Version, mod.Name, mod.DownloadLink);
-                    }
-                }
-            }
         }
     }
 
@@ -441,18 +380,18 @@ namespace Easy_Minecraft_Modpacks
             var redir = Workarounds.GetRedirectedUrl(url);
 
             var disposition = client.ResponseHeaders["Content-Disposition"];
-            
+
             var locationEnding = redir?.Substring(redir.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var hasQuery = locationEnding?.IndexOf("?", StringComparison.Ordinal) ?? -1;
 
             if (hasQuery != -1)
             {
                 locationEnding = locationEnding?.Substring(0, hasQuery);
             }
-                
+
             var urlEnding = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding));
 
             File.WriteAllBytes($"{targetDir}\\{filename}", data);
@@ -475,18 +414,18 @@ namespace Easy_Minecraft_Modpacks
             var redir = Workarounds.GetRedirectedUrl(url);
 
             var disposition = client.ResponseHeaders["Content-Disposition"];
-            
+
             var locationEnding = redir?.Substring(redir.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var hasQuery = locationEnding?.IndexOf("?", StringComparison.Ordinal) ?? -1;
 
             if (hasQuery != -1)
             {
                 locationEnding = locationEnding?.Substring(0, hasQuery);
             }
-                
+
             var urlEnding = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
-            
+
             var filename = Workarounds.UrlDecode(disposition != null ? new ContentDisposition(disposition).FileName : (locationEnding != null ? locationEnding : urlEnding));
 
             return filename;
@@ -499,7 +438,7 @@ namespace Easy_Minecraft_Modpacks
         {
             return Uri.UnescapeDataString(url);
         }
-        
+
         public static string GetRedirectedUrl(string url)
         {
             HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -518,15 +457,15 @@ namespace Easy_Minecraft_Modpacks
                     }
                 }
             }
-            catch(System.Net.WebException e)
+            catch (System.Net.WebException e)
             {
-                if(e.Status == WebExceptionStatus.ProtocolError)
+                if (e.Status == WebExceptionStatus.ProtocolError)
                 {
                     var response = (HttpWebResponse)e.Response;
-                    if(response.StatusCode == HttpStatusCode.Redirect
-                       || response.StatusCode == HttpStatusCode.MovedPermanently
-                       || response.StatusCode == HttpStatusCode.TemporaryRedirect
-                      )
+                    if (response.StatusCode == HttpStatusCode.Redirect
+                        || response.StatusCode == HttpStatusCode.MovedPermanently
+                        || response.StatusCode == HttpStatusCode.TemporaryRedirect
+                       )
                     {
                         return response.Headers["Location"];
                     }

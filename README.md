@@ -12,7 +12,7 @@ On Modrinth, right clicking the main download button is direct.
 # Features
 - Easy creation and sharing of modpack configs.
 - One click installation of modpack configs
-- Generate mod list from existing mods folder, saving SOME time. Note this isn't a one click and done; it will still need versions changed to match game version if they were not found, or a mod version was filled in incorrectly.
-- Pasting A download link **when version and name are not filled in** will try to autofill via obtaining it from the URL pasted. Version will assume the entry above's version if present, otherwise try to pull it from the filename retrieved.
+- Generate mod list from existing mods folder, saving SOME time. Note this isn't a one click and done; it will still need the name adjusted if wrong.
+- Pasting A download link **when name is not filled in** will try to autofill via obtaining it from the URL pasted, otherwise try to pull it from the filename retrieved.
 
-![image](https://github.com/MistressPlague/Easy-Minecraft-Modpacks/assets/36628963/a7403dbb-56d5-4d5a-b15e-2fd24b867d58)
+![image](https://github.com/MistressPlague/Easy-Minecraft-Modpacks/assets/36628963/ba08d98a-5da6-4780-94c6-c297f1e58578)
