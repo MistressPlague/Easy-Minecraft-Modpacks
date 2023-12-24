@@ -30,23 +30,30 @@
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.ModName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Download = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.installToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backupDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.withoutDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateFromModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.ModName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Download = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.ProgressPanel = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.ProgressPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.ModName, this.Download });
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -58,6 +65,17 @@
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsRemoved);
+            // 
+            // ModName
+            // 
+            this.ModName.HeaderText = "Name";
+            this.ModName.Name = "ModName";
+            // 
+            // Download
+            // 
+            this.Download.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Download.HeaderText = "Download";
+            this.Download.Name = "Download";
             // 
             // menuStrip1
             // 
@@ -94,10 +112,24 @@
             // 
             // installToolStripMenuItem
             // 
+            this.installToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.backupDeleteToolStripMenuItem, this.withoutDeleteToolStripMenuItem });
             this.installToolStripMenuItem.Name = "installToolStripMenuItem";
             this.installToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.installToolStripMenuItem.Text = "Install";
-            this.installToolStripMenuItem.Click += new System.EventHandler(this.installToolStripMenuItem_Click);
+            // 
+            // backupDeleteToolStripMenuItem
+            // 
+            this.backupDeleteToolStripMenuItem.Name = "backupDeleteToolStripMenuItem";
+            this.backupDeleteToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.backupDeleteToolStripMenuItem.Text = "Backup/Delete";
+            this.backupDeleteToolStripMenuItem.Click += new System.EventHandler(this.backupDeleteToolStripMenuItem_Click);
+            // 
+            // withoutDeleteToolStripMenuItem
+            // 
+            this.withoutDeleteToolStripMenuItem.Name = "withoutDeleteToolStripMenuItem";
+            this.withoutDeleteToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.withoutDeleteToolStripMenuItem.Text = "Without Delete";
+            this.withoutDeleteToolStripMenuItem.Click += new System.EventHandler(this.withoutDeleteToolStripMenuItem_Click);
             // 
             // generateFromModsToolStripMenuItem
             // 
@@ -125,16 +157,31 @@
             this.label2.TabIndex = 3;
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ModName
+            // progressBar1
             // 
-            this.ModName.HeaderText = "Name";
-            this.ModName.Name = "ModName";
+            this.progressBar1.Location = new System.Drawing.Point(19, 38);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(347, 30);
+            this.progressBar1.TabIndex = 4;
             // 
-            // Download
+            // ProgressPanel
             // 
-            this.Download.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Download.HeaderText = "Download";
-            this.Download.Name = "Download";
+            this.ProgressPanel.Controls.Add(this.label3);
+            this.ProgressPanel.Controls.Add(this.progressBar1);
+            this.ProgressPanel.Location = new System.Drawing.Point(0, 367);
+            this.ProgressPanel.Name = "ProgressPanel";
+            this.ProgressPanel.Size = new System.Drawing.Size(388, 83);
+            this.ProgressPanel.TabIndex = 5;
+            this.ProgressPanel.Visible = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(146, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Downloading Mod: namehere";
             // 
             // MainUI
             // 
@@ -142,6 +189,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ProgressPanel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
@@ -154,9 +202,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.ProgressPanel.ResumeLayout(false);
+            this.ProgressPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem backupDeleteToolStripMenuItem;
+
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Panel ProgressPanel;
+        private System.Windows.Forms.Label label3;
+
+        private System.Windows.Forms.ToolStripMenuItem withoutDeleteToolStripMenuItem;
 
         private System.Windows.Forms.Label label2;
 

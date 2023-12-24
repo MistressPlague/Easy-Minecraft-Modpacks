@@ -179,60 +179,6 @@ namespace Easy_Minecraft_Modpacks
             }
         }
 
-        private void installToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            installToolStripMenuItem.Enabled = false;
-
-            MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            using var folderDialog = new FolderBrowserDialog();
-            folderDialog.Description = "Select your Minecraft directory";
-
-            var mcdir = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\.minecraft";
-
-            folderDialog.SelectedPath = Directory.Exists(mcdir) ? mcdir : Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-            if (folderDialog.ShowDialog() == DialogResult.OK)
-            {
-                var minecraftDirectory = folderDialog.SelectedPath;
-
-                var modsFolder = Path.Combine(minecraftDirectory, "mods");
-
-                if (Directory.Exists(modsFolder))
-                {
-                    if (File.Exists($"{modsFolder}\\dont_backup"))
-                    {
-                        Directory.Delete(modsFolder, true);
-                    }
-                    else
-                    {
-                        RetryNaming:
-                        var backupFolder = Path.Combine(minecraftDirectory, "mods_backup") + "_" + Guid.NewGuid().ToString("N");
-
-                        if (Directory.Exists(backupFolder))
-                        {
-                            goto RetryNaming;
-                        }
-
-                        Directory.Move(modsFolder, backupFolder);
-                    }
-                }
-
-                Directory.CreateDirectory(modsFolder);
-
-                foreach (var mod in Config.InternalConfig.Mods)
-                {
-                    client.BetterDownloadFile(mod.DownloadLink, modsFolder);
-                }
-
-                File.WriteAllText($"{modsFolder}\\dont_backup", "");
-
-                MessageBox.Show("Done!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            installToolStripMenuItem.Enabled = true;
-        }
-
         private async void generateFromModsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!DoUnsavedChangesCheck())
@@ -361,6 +307,94 @@ namespace Easy_Minecraft_Modpacks
         private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             UpdateRows();
+        }
+
+        private void withoutDeleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Install(false);
+        }
+
+        private void backupDeleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Install();
+        }
+        
+        private void Install(bool Delete = true)
+        {
+            try
+            {
+                Enabled = false;
+
+                MessageBox.Show("Please select your Minecraft directory.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                using var folderDialog = new SaveFileDialog();
+                folderDialog.Filter = "Minecraft Directory|minecraft.directory";
+
+                var mcdir = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\.minecraft";
+
+                folderDialog.InitialDirectory = Directory.Exists(mcdir) ? mcdir : Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                folderDialog.FileName = "minecraft.directory";
+
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var minecraftDirectory = Path.GetDirectoryName(folderDialog.FileName);
+
+                    var modsFolder = Path.Combine(minecraftDirectory, "mods");
+
+                    if (Delete && Directory.Exists(modsFolder))
+                    {
+                        if (File.Exists($"{modsFolder}\\dont_backup"))
+                        {
+                            Directory.Delete(modsFolder, true);
+                        }
+                        else
+                        {
+                            RetryNaming:
+                            var backupFolder = Path.Combine(minecraftDirectory, "mods_backup") + "_" + Guid.NewGuid().ToString("N");
+
+                            if (Directory.Exists(backupFolder))
+                            {
+                                goto RetryNaming;
+                            }
+
+                            Directory.Move(modsFolder, backupFolder);
+                        }
+                    }
+
+                    Directory.CreateDirectory(modsFolder);
+
+                    ProgressPanel.Visible = true;
+
+                    for (var index = 0; index < Config.InternalConfig.Mods.Count; index++)
+                    {
+                        var mod = Config.InternalConfig.Mods[index];
+
+                        label3.Text = $"Downloading Mod: {mod.Name} ({(index)} / {Config.InternalConfig.Mods.Count})";
+                        progressBar1.Value = (int)(index / (double)Config.InternalConfig.Mods.Count * 100.00);
+                        Application.DoEvents();
+
+                        if (File.Exists(Path.Combine(modsFolder, client.GetFileName(mod.DownloadLink))))
+                        {
+                            continue;
+                        }
+
+                        client.BetterDownloadFile(mod.DownloadLink, modsFolder);
+                    }
+
+                    ProgressPanel.Visible = false;
+                    progressBar1.Value = 0;
+
+                    File.Create($"{modsFolder}\\dont_backup").Flush();
+                                
+                    Enabled = true;
+
+                    MessageBox.Show("Done!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch
+            {
+                Enabled = true;
+            }
         }
     }
 
