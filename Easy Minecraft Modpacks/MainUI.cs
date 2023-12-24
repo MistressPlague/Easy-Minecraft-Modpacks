@@ -33,7 +33,7 @@ namespace Easy_Minecraft_Modpacks
         public static ConfigLib<Configuration> Config;
 
         private static WebClient client = new WebClient();
-        private readonly string FileExt = "Modpack.json";
+        private const string FileExt = "Modpack.json";
 
         public MainUI()
         {
@@ -48,7 +48,7 @@ namespace Easy_Minecraft_Modpacks
             }
 
             using var popup = new OpenFileDialog();
-            popup.Filter = "Modpack Config|*.Modpack.json";
+            popup.Filter = $"Modpack Config|*.{FileExt}";
 
             if (popup.ShowDialog() == DialogResult.OK)
             {
@@ -93,8 +93,8 @@ namespace Easy_Minecraft_Modpacks
             if (Config == null)
             {
                 using var popup = new SaveFileDialog();
-                popup.Filter = "Modpack Config|*.Modpack.json";
-                popup.FileName = "NoName.Modpack.json";
+                popup.Filter = $"Modpack Config|*.{FileExt}";
+                popup.FileName = $"NoName.{FileExt}";
 
                 if (popup.ShowDialog() == DialogResult.OK)
                 {
