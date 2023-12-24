@@ -33,6 +33,7 @@ namespace Easy_Minecraft_Modpacks
         public static ConfigLib<Configuration> Config;
 
         private static WebClient client = new WebClient();
+        private readonly string FileExt = "Modpack.json";
 
         public MainUI()
         {
@@ -279,6 +280,39 @@ namespace Easy_Minecraft_Modpacks
                 if (MessageBox.Show("Are you sure you want to quit? You have unsaved changes!", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.No)
                 {
                     e.Cancel = true;
+                }
+            }
+        }
+        
+        private void dataGridView1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!DoUnsavedChangesCheck())
+            {
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (!files[0].EndsWith(FileExt)) return;
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void dataGridView1_DragDrop(object sender, DragEventArgs e)
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null && files.Length > 0)
+            {
+                var file = files[0];
+                if (file.EndsWith(FileExt))
+                {
+                    Config = new ConfigLib<Configuration>(file);
+                    dataGridView1.Rows.Clear();
+                    foreach (var mod in Config.InternalConfig.Mods)
+                    {
+                        dataGridView1.Rows.Add(mod.Name, mod.DownloadLink);
+                    }
                 }
             }
         }
