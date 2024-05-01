@@ -38,6 +38,13 @@ namespace Easy_Minecraft_Modpacks
         public MainUI()
         {
             InitializeComponent();
+            
+            client.DownloadProgressChanged += ClientOnDownloadProgressChanged;
+        }
+
+        private void ClientOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -352,6 +359,8 @@ namespace Easy_Minecraft_Modpacks
         {
             Install();
         }
+
+        private ModInfo CurrentModDownload = null;
         
         private void Install(bool Delete = true)
         {
@@ -384,7 +393,7 @@ namespace Easy_Minecraft_Modpacks
                         else
                         {
                             RetryNaming:
-                            var backupFolder = Path.Combine(minecraftDirectory, "mods_backup") + "_" + Guid.NewGuid().ToString("N");
+                            var backupFolder = Path.Combine(minecraftDirectory, "mods_backup") + " " + DateTime.Now.ToString("dd-MM-yyyy hh-mm-ss tt");
 
                             if (Directory.Exists(backupFolder))
                             {
@@ -401,20 +410,16 @@ namespace Easy_Minecraft_Modpacks
 
                     for (var index = 0; index < Config.InternalConfig.Mods.Count; index++)
                     {
-                        var mod = Config.InternalConfig.Mods[index];
-
-                        label3.Text = $"Downloading Mod: {mod.Name} ({(index)} / {Config.InternalConfig.Mods.Count})";
+                        CurrentModDownload = Config.InternalConfig.Mods[index];
+                        
+                        label3.Text = $"Downloading Mod: {CurrentModDownload.Name} ({(Config.InternalConfig.Mods.IndexOf(CurrentModDownload))} / {Config.InternalConfig.Mods.Count})";
                         progressBar1.Value = (int)(index / (double)Config.InternalConfig.Mods.Count * 100.00);
                         Application.DoEvents();
 
-                        if (File.Exists(Path.Combine(modsFolder, client.GetFileName(mod.DownloadLink))))
-                        {
-                            continue;
-                        }
-
-                        client.BetterDownloadFile(mod.DownloadLink, modsFolder);
+                        client.BetterDownloadFile(CurrentModDownload.DownloadLink, modsFolder);
                     }
 
+                    CurrentModDownload = null;
                     ProgressPanel.Visible = false;
                     progressBar1.Value = 0;
 

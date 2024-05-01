@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Easy_Minecraft_Modpacks")]
+[assembly: AssemblyTitle("Easy Minecraft Modpacks")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Easy_Minecraft_Modpacks")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyCompany("Kanna")]
+[assembly: AssemblyProduct("Easy Minecraft Modpacks")]
+[assembly: AssemblyCopyright("Copyright © Kanna 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
